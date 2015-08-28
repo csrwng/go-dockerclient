@@ -488,7 +488,7 @@ func headersWithAuth(auths ...interface{}) (map[string]string, error) {
 	var headers = make(map[string]string)
 
 	for _, auth := range auths {
-		switch auth.(type) {
+		switch a := auth.(type) {
 		case AuthConfiguration:
 			var buf bytes.Buffer
 			if err := json.NewEncoder(&buf).Encode(auth); err != nil {
@@ -497,7 +497,7 @@ func headersWithAuth(auths ...interface{}) (map[string]string, error) {
 			headers["X-Registry-Auth"] = base64.URLEncoding.EncodeToString(buf.Bytes())
 		case AuthConfigurations:
 			var buf bytes.Buffer
-			if err := json.NewEncoder(&buf).Encode(auth); err != nil {
+			if err := json.NewEncoder(&buf).Encode(a.Configs); err != nil {
 				return nil, err
 			}
 			headers["X-Registry-Config"] = base64.URLEncoding.EncodeToString(buf.Bytes())
